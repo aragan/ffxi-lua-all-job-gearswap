@@ -5,11 +5,7 @@
 --                                                                             --
 ---------------------------------------------------------------------------------
 -- Haste/DW Detection Requires Gearinfo Addon
--- IMPORTANT: This include requires supporting include files:
--- from my web :
--- Mote-include
--- Mote-Mappings
--- Mote-Globals
+
 -------------------------------------------------------------------------------------------------------------------
 -- Setup functions for this job.  Generally should not be modified.
 -------------------------------------------------------------------------------------------------------------------
@@ -21,7 +17,23 @@
     for ranged weaponskills, but not actually meleeing.
     
     Weaponskill mode, if set to 'Normal', is handled separately for melee and ranged weaponskills.
---]]
+
+state.Roller1 state.Roller2 have all rolls send to autocor addon 
+
+cycle Roll
+
+    send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
+    send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
+    send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
+    send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
+
+macro
+
+/con gs c Roller1
+/con gs c Roller2
+/con input //cor 
+
+    --]]
 
 
 -- Initialization function for this job file.
@@ -108,17 +120,29 @@ function job_setup()
     no_swap_gear = S{"Warp Ring", "Dim. Ring (Dem)", "Dim. Ring (Holla)", "Dim. Ring (Mea)",
     "Trizek Ring", "Echad Ring", "Facility Ring", "Capacity Ring", "Wh. Rarab Cap +1",
     "Dev. Bul. Pouch", "Chr. Bul. Pouch", "Liv. Bul. Pouch", "Cumulus Masque +1", "Airmid's Gorget",}
-
-    elemental_ws = S{"Flash Nova", "Sanguine Blade","Seraph Blade","Burning Blade","Red Lotus Blade"
-    , "Shining Strike", "Aeolian Edge", "Gust Slash", "Cyclone","Energy Steal","Energy Drain"
-    , "Leaden Salute", "Wildfire", "Hot Shot", "Flaming Arrow", "Trueflight", "Blade: Teki", "Blade: To"
-    , "Blade: Chi", "Blade: Ei", "Blade: Yu", "Frostbite", "Freezebite", "Herculean Slash", "Cloudsplitter"
-    , "Primal Rend", "Dark Harvest", "Shadow of Death", "Infernal Scythe", "Thunder Thrust", "Raiden Thrust"
-    , "Tachi: Goten", "Tachi: Kagero", "Tachi: Jinpu", "Tachi: Koki", "Rock Crusher", "Earth Crusher", "Starburst"
-    , "Sunburst", "Omniscience", "Garland of Bliss"}
+    elemental_ws = S{"Aeolian Edge", "Leaden Salute", "Wildfire"}
     no_shoot_ammo = S{"Animikii Bullet", "Hauksbok Bullet"}
     absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
     state.QDMode = M{['description']='Quick Draw Mode', 'STP', 'Enhance', 'TH'}
+    state.Roller1 = M{['description']='Roller', 'Chaos Roll', 'Samurai Roll','Fighter\'s Roll',
+    'Wizard\'s Roll', 'Warlock\'s Roll','Miser\'s Roll',
+      'Companion\'s Roll','Puppet Roll', 'Beast Roll', 'Drachen Roll',
+      'Blitzer\'s Roll', 'Courser\'s Roll', 'Allies\' Roll',
+     'Avenger\'s Roll', 'Magus\'s Roll', 'Runeist\'s Roll', 'Gallant\'s Roll',
+    'Monk\'s Roll', 'Healer\'s Roll', 'Rogue\'s Roll',
+    'Choral Roll', 'Hunter\'s Roll', 'Ninja Roll', 'Evoker\'s Roll',
+    'Dancer\'s Roll', 'Scholar\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll','Naturalist\'s Roll',
+    }
+    state.Roller2 = M{['description']='Roller', 'Samurai Roll', 'Chaos Roll', 'Fighter\'s Roll',
+    'Wizard\'s Roll', 'Warlock\'s Roll','Miser\'s Roll',
+      'Companion\'s Roll','Puppet Roll', 'Beast Roll', 'Drachen Roll',
+      'Blitzer\'s Roll', 'Courser\'s Roll', 'Allies\' Roll',
+     'Avenger\'s Roll', 'Magus\'s Roll', 'Runeist\'s Roll', 'Gallant\'s Roll',
+    'Monk\'s Roll', 'Healer\'s Roll', 'Rogue\'s Roll',
+    'Choral Roll', 'Hunter\'s Roll', 'Ninja Roll', 'Evoker\'s Roll',
+    'Dancer\'s Roll', 'Scholar\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll','Naturalist\'s Roll',
+    }
+    state.rollset = M{'none', 'melee','magic', description='rollset'}
 
 end
 
@@ -186,11 +210,14 @@ function user_setup()
     send_command('bind !f7 gs c cycleback Weapongun')
     send_command('bind f6 gs c cycle WeaponSet')
     send_command('bind !f6 gs c cycleback WeaponSet')
-    send_command('bind @c gs c toggle CapacityMode')
-    send_command('bind @x gs c toggle RP')  
+    send_command('bind !- gs c toggle RP') 
     send_command('bind ^p gs c toggle phalanxset') 
     send_command('@wait 6;input /lockstyleset 151')
-
+    send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
+    send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
+    send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
+    send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
+    send_command('bind f1 gs c cycle rollset')
     state.Auto_Kite = M(false, 'Auto_Kite')
 
     Haste = 0
@@ -239,12 +266,6 @@ function init_gear_sets()
     sets.DefaultShield = {sub="Nusku Shield"}
     sets.FullTP = {ear1="Crematio Earring"}
 
-
-     -- neck JSE Necks Reinforcement Points Mode add u neck here 
-     sets.RP = {}
-     -- Capacity Points Mode back
-    sets.CapacityMantle = {}
-    
     -- Precast Sets
 
     -- Precast sets to enhance JAs
@@ -1296,6 +1317,7 @@ sets.buff.Doom = {    neck="Nicander's Necklace",
    waist="Gishdubar Sash",
    left_ring="Purity Ring",
    right_ring="Blenmot's Ring +1",}
+   sets.RP = {neck="Comm. Charm +2"}
 
 end
 
@@ -1798,7 +1820,17 @@ function customize_melee_set(meleeSet)
 end
 function job_self_command(cmdParams, eventArgs)
     gearinfo(cmdParams, eventArgs)
+
+
+    if cmdParams[1]:lower() == 'roller1' then
+        send_command('@input //cor roll 1 "'..state.Roller1.value..'"')
+    elseif cmdParams[1]:lower() == 'roller2' then
+        send_command('@input //cor roll 2 "'..state.Roller2.value..'"')
+    end
+  
+
 end
+
 
 function check_weaponset()
     equip(sets[state.WeaponSet.current])

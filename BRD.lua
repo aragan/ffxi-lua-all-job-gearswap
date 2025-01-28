@@ -31,8 +31,23 @@
     To use a Terpander rather than Daurdabla, set the info.ExtraSongInstrument variable to
     'Terpander', and info.ExtraSongs to 1.
 ---]]
-
+--[[
 --use addon singer and AutoBuffBard addon -- AutoBuffBard save more song setup command like : //abb bumba ccsv 
+
+state.Songset have songsset its copy from AutoBuffBard addon file abb_sets 
+u can add name songsset there and copy name in state.Songset
+
+cycle Songset
+
+send_command('bind f2 gs c cycle Songset')
+send_command('bind !f2 gs c Songset')
+
+macro
+
+/con gs c Songset
+
+its do all ja first  then do u songset
+]]
 
 -- Initialization function for this job file.
 function get_sets()
@@ -55,9 +70,6 @@ organizer_items = {
     "G. Curry Bun +1",
     "Pukatrice Egg",
     "Moogle Amp.",
-    "Popo. con Queso",
-    "Pear Crepe",
-    "Crab Sushi",
     "Om. Sandwich",
     "Red Curry Bun",
     "Gyudon",
@@ -119,7 +131,7 @@ function user_setup()
     state.MagicalDefenseMode:options('MDT')
     state.WeaponskillMode:options('Normal', 'PDL')
     state.CastingMode:options('Normal', 'AUGMENT')
-    state.IdleMode:options('Normal', 'PDT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
+    state.IdleMode:options('Normal', 'DT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
 
     state.LullabyMode = M{['description']='Lullaby Instrument', 'Harp', 'Horn'}
 
@@ -170,7 +182,8 @@ function user_setup()
     state.HippoMode = M(false, "hippoMode")
     state.RP = M(false, "Reinforcement Points Mode")
     state.CapacityMode = M(false, 'Capacity Point Mantle')
-
+	state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+	 'haste', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
     state.WeaponSet = M{['description']='Weapon Set', 'Normal', 'Twashtar', 'TwashtarCrepuscular', 'Tauret', 'Naegling', 'NaeglingCrepuscular','Carnwenhan', 'Aeneas', 'Xoanon'}
     --state.Moving = M(false, "moving")
 
@@ -187,8 +200,8 @@ function user_setup()
     send_command('bind ^/ gs disable all')
     --send_command('bind f7 input //fillmode')
     send_command('bind f1 gs c cycle HippoMode')
-    send_command('bind f2 gs c cycle Etude')
-    send_command('bind !f2 gs c Etude')
+    send_command('bind ^3 gs c cycle Etude')
+    send_command('bind ^4 gs c Etude')
     send_command('bind f3 gs c cycle Carol')
     send_command('bind !f3 gs c Carol')
     send_command('bind f4 gs c cycle Threnody')
@@ -198,7 +211,8 @@ function user_setup()
     send_command('bind @` gs c cycle LullabyMode')
     send_command('bind @c gs c toggle CapacityMode')
     send_command('bind @x gs c toggle RP')  
-
+    send_command('bind f2 gs c cycle Songset')
+    send_command('bind !f2 gs c Songset')
     select_default_macro_book()
     update_combat_form()
 	DW_needed = 0
@@ -582,8 +596,7 @@ sets.precast.WS['Shattersoul'] = {
     sets.midcast.FastRecast = {}
         
     -- Gear to enhance certain classes of songs.  No instruments added here since Gjallarhorn is being used.
-    sets.midcast.Ballad = {    	legs="Fili Rhingrave +2",--legs="Fili Rhingrave +3",
-}
+    sets.midcast.Ballad = {legs="Fili Rhingrave +2"}
     sets.midcast.Lullaby = {}
     sets.midcast.Madrigal = {head="Fili Calot +2", back="Intarabus's Cape",}
     sets.midcast.March = {hands="Fili Manchettes +2",}
@@ -591,11 +604,10 @@ sets.precast.WS['Shattersoul'] = {
     sets.midcast.Minne = {}
     sets.midcast.Paeon = {}
     sets.midcast.Carol = {}
-    sets.midcast["Sentinel's Scherzo"] = {    	feet="Fili Cothurnes +2",--feet="Fili Cothurnes +3",
-}
-    sets.midcast['Magic Finale'] = {    	neck="Sanctity Necklace",
+    sets.midcast["Sentinel's Scherzo"] = {feet="Fili Cothurnes +2"}
+    sets.midcast['Magic Finale'] = {neck="Sanctity Necklace",
     waist="Luminary Sash",
-    legs="Fili Rhingrave +2",--legs="Fili Rhingrave +3",
+    legs="Fili Rhingrave +2",
 }
 
     sets.midcast.Mazurka = {range=info.ExtraSongInstrument}
@@ -1005,20 +1017,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
         right_ring="Chirich Ring +1",
         back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
     })
-    sets.engaged.PD = set_combine(sets.engaged, {range="Linos",
-        head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Ashera Harness",
-        hands="Bunzi's Gloves",
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet="Battlecast Gaiters",
-        neck={ name="Bard's Charm +2", augments={'Path: A',}},
-        waist="Reiki Yotai",
-        left_ear="Suppanomimi",
-        right_ear="Balder Earring +1",
-        left_ring="Moonlight Ring",
-        right_ring="Defending Ring",
-        back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-    })
+
 
     ---------------------------------------- DW-HASTE ------------------------------------------
     -- * DNC Subjob DW Trait: +15%
@@ -1720,6 +1719,9 @@ function job_self_command(cmdParams, eventArgs)
     elseif cmdParams[1]:lower() == 'threnody' then
         send_command('@input /ma "'..state.Threnody.value..'" <stnpc>')
     end
+    if cmdParams[1]:lower() == 'songset' then
+		send_command('@input //abb "'..state.Songset.value..'" ccsv')
+	end
 end
 function check_weaponset()
     equip(sets[state.WeaponSet.current])
